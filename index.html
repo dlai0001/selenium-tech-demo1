@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Ember Starter Kit</title>
+<title>Selenium Tech Demo</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -29,9 +29,9 @@
     <ul>
     {{#each item in this}}
       {{#if item.isSelected}}
-        <li {{action "itemSelected" item on="click"}} style="background-color: yellow;">{{item.fullName}} : $ {{item.moneyRaised}}</li>
+        <li {{action "itemSelected" item on="click"}} style="background-color: yellow;">{{item.fullName}} : $ {{item.formatMoney}}</li>
       {{else}}
-        <li {{action "itemSelected" item on="click"}}>{{item.fullName}} : $ {{item.moneyRaised}}</li>
+        <li {{action "itemSelected" item on="click"}}>{{item.fullName}} : $ {{item.formatMoney}}</li>
       {{/if}}
     {{/each}}
     </ul>
@@ -51,7 +51,7 @@
             <p>Credit Card: <input></p>
             <p>Expires: <input></p>
             <p>CCV: <input></p>
-            <button {{action "buyMe"}} >Buy Me</button>
+            <button id="buyMe" {{action "buyMe"}} >Buy Me</button>
         </div>
     {{/if}}
 
@@ -60,10 +60,10 @@
 
   <script type="text/x-handlebars" data-template-name="livesearch">
       <div>
-          {{input value=searchValue}}
+          {{input id="searchInput" value=searchValue}}
           <ul>
               {{#each item in filteredContent}}
-              <li>{{item.fullName}} : $ {{item.moneyRaised}}</li>
+              <li>{{item.fullName}} : $ {{item.formatMoney}}</li>
               {{/each}}
           </ul>
       </div>

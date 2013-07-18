@@ -38,6 +38,13 @@ App.IndexController = Ember.ArrayController.extend({
 });
 
 
+App.MoveboxController = Ember.ObjectController.extend({
+    purchased: false,
+    buyMe: function() {
+        this.set('purchased', true);
+    }
+})
+
 App.LivesearchController = Ember.ArrayController.extend({
 
     searchValue: '',
@@ -63,8 +70,30 @@ App.LivesearchController = Ember.ArrayController.extend({
 
 
     delaySearch: function() {
-        Ember.run.debounce(this, function() {
-            this.incrementProperty('searchTrigger');
+        console.log("LATCH UNSET");
+        window._AUTOMATION_LATCH = false;
+        _this = this
+        Ember.run.debounce({name:'livesearch'}, function() {
+
+            //------------------------------------------------------------------
+            // Notice JQuery ajax calls return Promise objects.
+            //------------------------------------------------------------------
+            var jqxhr = $.get("http://google.com", function() {
+            })
+            .always(function() {
+                console.log("ajax round trip completed.");
+                // dev code that does ajax processing.
+                _this.incrementProperty('searchTrigger');
+
+            }).always(function(){
+                //------------------------------------------------------------------
+                // Notice I just daisy chain my LATCH unto the ajax promise object.
+                //------------------------------------------------------------------
+                console.log("LATCH SET");
+                window._AUTOMATION_LATCH = true;
+            });
+
+
         }, 1000);
     }.observes('searchValue'),
 
@@ -73,6 +102,24 @@ App.LivesearchController = Ember.ArrayController.extend({
 
 
 
+});
+
+
+App.IndexView = Ember.View.extend({
+    interval: null,
+
+    didInsertElement: function(){
+        var myinterval = setInterval(function(){
+            pid = Math.floor(Math.random()*6) + 1;
+            money = Math.floor(Math.random()*500) / 100;
+            App.Person.find(pid).incrementProperty('moneyRaised', money);
+        }, 20);
+        this.set('interval', myinterval)
+    },
+
+    willDestroyElement: function() {
+        clearInterval(this.get('interval'))
+    }
 });
 
 App.MoveboxView = Ember.View.extend({
@@ -103,6 +150,10 @@ App.Person = DS.Model.extend({
     isSelected: DS.attr('boolean'),
     moneyRaised: DS.attr('number'),
 
+    formatMoney:function() {
+        return this.get('moneyRaised').toFixed(2);
+    }.property('moneyRaised'),
+
     fullName: function() {
         return this.get('firstName') + ' ' + this.get('lastName');
     }.property('firstName', 'lastName')
@@ -122,8 +173,3 @@ App.Person.FIXTURES = [
 ];
 
 
-setInterval(function(){
-    pid = Math.floor(Math.random()*6) + 1;
-    money = Math.floor(Math.random()*500) / 100;
-    App.Person.find(pid).incrementProperty('moneyRaised', money);
-}, 500);
