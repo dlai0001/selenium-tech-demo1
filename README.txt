@@ -14,7 +14,7 @@ Selenium scripts can be found under the /tests/ folder.
 
 Techniques Demonstrated
 ========================
-* Doing actions in JavaScript
-* jQuery queue polling.
-* JavaScript Ajax Promise Latching
+* Doing actions in JavaScript - http://localhost:4567/index.html#/
+* jQuery queue polling. - http://localhost:4567/index.html#/movebox
+* JavaScript Ajax Promise Latching - http://localhost:4567/index.html#/livesearch
 
