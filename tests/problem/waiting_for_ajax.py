@@ -34,7 +34,7 @@ class Test(unittest.TestCase):
         
         
         # METHOD 1 HARD CODED SLEEP
-        time.sleep(10)
+        #time.sleep(10)
         
         # OR 
         

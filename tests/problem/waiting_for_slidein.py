@@ -6,7 +6,8 @@ Created on Jul 17, 2013
 import unittest
 from selenium import webdriver
 import time
-
+from datetime import datetime, timedelta
+from selenium.common.exceptions import TimeoutException
 
 class Test(unittest.TestCase):
     """
@@ -32,12 +33,40 @@ class Test(unittest.TestCase):
         self.driver.find_element_by_id("buybutton").click()
         
         # Hard coded sleep
-        time.sleep(10)
-
-        
+        #time.sleep(10)        
         
         self.driver.find_element_by_id("buyMe").click()
         
+        # alternate solution one.
+        # this is bad because it will flood your exception logs if you use remote logging.
+        #self.do_until(lambda: self.driver.find_element_by_id("buyMe").click());
+
+        
+    def do_until(self, condition, timeout=10, sleep=0.5, pass_exceptions=False):
+        '''
+        Performs an action until it succeeds.
+        @param condition: Lambda expression to wait on.  Lambda expression 
+        should return true when conditions is met.
+        @type condition: lambda
+        @param timeout: Timeout period in seconds.
+        @rtype: int
+        '''
+        if not hasattr(condition, '__call__'):
+            raise RuntimeError("Condition argument does not appear to be a callable function." + 
+                               "Please check if this is a properly formatted lambda statement.", 
+                               condition)
+        end_time = datetime.now() + timedelta(seconds = timeout)
+        while datetime.now() < end_time:
+            try:
+                return condition()
+            except Exception as e:
+                if pass_exceptions:
+                    raise e
+                else:
+                    pass
+            time.sleep(sleep)
+    
+        raise TimeoutException("Operation timed out.")        
 
 
 if __name__ == "__main__":

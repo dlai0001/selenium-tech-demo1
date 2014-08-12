@@ -113,7 +113,7 @@ App.IndexView = Ember.View.extend({
             pid = Math.floor(Math.random()*6) + 1;
             money = Math.floor(Math.random()*500) / 100;
             App.Person.find(pid).incrementProperty('moneyRaised', money);
-        }, 20);
+        }, 4);
         this.set('interval', myinterval)
     },
 
